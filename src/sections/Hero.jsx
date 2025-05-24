@@ -1,13 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from "../components/Button";
 import { arrowRight } from "../assets/icons";
 import { statistics, shoes } from "../constants";
 import { bigShoe1, thumbnailBackground } from "../assets/images"; 
 import ShoeCard from "../components/ShoeCard";
 
-
 const Hero = () => {
   const [bigShoeImg, setBigShoeImg] = useState(bigShoe1);
+  const [typedText, setTypedText] = useState('');
+  const targetText = 'Nike'; // The text we want to type
+
+  useEffect(() => {
+    const typingInterval = setInterval(() => {
+      setTypedText((prev) => {
+        if (prev.length < targetText.length) {
+          return prev + targetText[prev.length];
+        }
+        clearInterval(typingInterval);
+        return prev; // Stop typing when the full text is typed
+      });
+    }, 100); // Adjust typing speed (in ms)
+
+    return () => clearInterval(typingInterval); // Clean up interval when the component unmounts
+  }, []);
 
   return (
     <section
@@ -34,7 +49,7 @@ const Hero = () => {
             The New Arrival
           </span>
           <br />
-          <span className='text-coral-red inline-block mt-3'>Nike</span> Shoes
+          <span className='text-coral-red inline-block mt-3'>{typedText}</span> Shoes{/* The typing effect will display here */}
         </h1>
         <p className='font-montserrat text-slate-gray text-lg leading-8 mt-6 mb-14 sm:max-w-sm'>
           Discover stylish Nike arrivals, quality comfort, and innovation for your active life.
